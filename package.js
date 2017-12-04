@@ -15,11 +15,11 @@ Package.onUse(function(api) {
   api.use('email');
   api.use('session');
   api.use('react-meteor-data@0.2.11');
-  api.use('softwarerero:accounts-t9n');
+  // api.use('softwarerero:accounts-t9n', { weak: true });
   api.use('tmeasday:check-npm-versions@0.3.0');
 
   api.imply('accounts-base');
-  api.imply('softwarerero:accounts-t9n@1.3.3');
+  // api.imply('softwarerero:accounts-t9n@1.3.3');
 
   api.use('accounts-oauth', {weak: true});
   api.use('accounts-password', {weak: true});

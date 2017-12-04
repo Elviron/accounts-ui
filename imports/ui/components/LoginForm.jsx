@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Accounts } from 'meteor/accounts-base';
-import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { KEY_PREFIX } from '../../login_session.js';
 import './Form.jsx';
 
@@ -106,10 +105,52 @@ class LoginForm extends Component {
   }
 
   translate(text) {
-    // if (this.props.t) {
-    //   return this.props.t(text);
-    // }
-    return T9n.get(text);
+    switch (text) {
+      case 'enterUsernameOrEmail':
+        return 'Enter username or email';
+      case 'usernameOrEmail':
+        return 'Username or email';
+      case 'enterUsername':
+        return 'Enter username';
+      case 'username':
+        return 'Username';
+      case 'enterEmail':
+        return 'Enter email';
+      case 'email':
+        return 'Email';
+      case 'enterPassword':
+        return 'Enter password';
+      case 'password':
+        return 'Password';
+      case 'choosePassword':
+        return 'Choose a Password';
+      case 'enterNewPassword':
+        return 'Enter new password';
+      case 'newPassword':
+        return 'New password';
+      case 'signOut':
+        return 'Sign Out';
+      case 'signUp':
+        return 'Sign Up';
+      case 'signIn':
+        return 'Sign In';
+      case 'forgotPassword':
+        return 'Forgot your password?';
+      case 'changePassword':
+        return 'Change Password';
+      case 'resetYourPassword':
+        return 'Reset your password';
+      case 'cancel':
+        return 'Cancel';
+      case 'info.emailSent':
+        return 'Email sent';
+      case 'info.passwordChanged':
+        return 'Password changed';
+      case 'error.accounts.invalid_email':
+        return 'Invalid email';
+      default:
+        return text;
+    }
   }
 
   validateField(field, value) {
@@ -631,7 +672,7 @@ class LoginForm extends Component {
       Meteor.loginWithPassword(loginSelector, password, (error, result) => {
         onSubmitHook(error,formState);
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          this.showMessage(error.reason || "Unknown error", 'error');
         }
         else {
           loginResultCallback(() => this.state.onSignedInHook());
@@ -692,7 +733,7 @@ class LoginForm extends Component {
     loginWithService(options, (error) => {
       onSubmitHook(error,formState);
       if (error) {
-        this.showMessage(`error.accounts.${error.reason}` || "unknown_error");
+        this.showMessage(error.reason || "Unknown error");
       } else {
         this.setState({ formState: STATES.PROFILE });
         this.clearDefaultFieldValues();
@@ -759,8 +800,8 @@ class LoginForm extends Component {
     const SignUp = function(_options) {
       Accounts.createUser(_options, (error) => {
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
-          if (this.translate(`error.accounts.${error.reason}`)) {
+          this.showMessage(error.reason || "Unknown error", 'error');
+          if (this.translate(error.reason)) {
             onSubmitHook(`error.accounts.${error.reason}`, formState);
           }
           else {
@@ -810,7 +851,7 @@ class LoginForm extends Component {
 
       Accounts.loginWithoutPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          this.showMessage(error.reason || "Unknown error", 'error');
         }
         else {
           this.showMessage(this.translate("info.emailSent"), 'success', 5000);
@@ -824,7 +865,7 @@ class LoginForm extends Component {
 
       Accounts.loginWithoutPassword({ email: usernameOrEmail, username: usernameOrEmail }, (error) => {
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          this.showMessage(error.reason || "Unknown error", 'error');
         }
         else {
           this.showMessage(this.translate("info.emailSent"), 'success', 5000);
@@ -841,7 +882,7 @@ class LoginForm extends Component {
       else {
         errMsg = this.translate("error.accounts.invalid_email");
       }
-      this.showMessage(errMsg,'warning');
+      this.showMessage(errMsg, 'warning');
       onSubmitHook(errMsg, formState);
     }
   }
@@ -864,7 +905,7 @@ class LoginForm extends Component {
 
       Accounts.forgotPassword({ email: email }, (error) => {
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          this.showMessage(error.reason || "Unknown error", 'error');
         }
         else {
           this.showMessage(this.translate("info.emailSent"), 'success', 5000);
@@ -897,7 +938,7 @@ class LoginForm extends Component {
     if (token) {
       Accounts.resetPassword(token, newPassword, (error) => {
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          this.showMessage(error.reason || "Unknown error", 'error');
           onSubmitHook(error, formState);
         }
         else {
@@ -913,7 +954,7 @@ class LoginForm extends Component {
     else {
       Accounts.changePassword(password, newPassword, (error) => {
         if (error) {
-          this.showMessage(`error.accounts.${error.reason}` || "unknown_error", 'error');
+          this.showMessage(error.reason || "Unknown error", 'error');
           onSubmitHook(error, formState);
         }
         else {
